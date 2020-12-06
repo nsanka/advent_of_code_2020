@@ -31,6 +31,11 @@ BBFFBBFRLL: row 102, column 4, seat ID 820.
 As a sanity check, look through your list of boarding passes. What is the highest seat ID on a boarding pass?
 '''
 #%%
+# Simple Code in two lines
+seats = [int(s,2) for s in open('day5_input.txt','r').read().replace("F","0").replace("B","1").replace("L","0").replace("R","1").split()]
+(max(seats),set(range(min(seats),max(seats))).difference(seats).pop())
+
+#%%
 with open('day5_input.txt') as fp:
    data = fp.readlines()
 
