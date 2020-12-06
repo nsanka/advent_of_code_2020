@@ -33,6 +33,11 @@ What is the sum of those counts?
 #%%
 with open('day6_input.txt') as fp:
    data = fp.read().split('\n\n')
+#%%
+'''Simple 2 lines code'''
+print(sum([len(set(group.replace('\n',''))) for group in data]))
+print(sum([len(set('abcdefghijklmnopqrstuvwxyz').intersection(*group.split())) for group in data]))
+'# End'
 
 # %%
 total = 0
