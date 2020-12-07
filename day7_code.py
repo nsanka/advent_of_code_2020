@@ -34,23 +34,33 @@ with open('day7_input.txt') as fp:
    data = fp.readlines()
 
 #%%
-other_bags = ['shiny gold bag']
-final_bags = []
-while len(other_bags) > 0:
-   print(other_bags)
-   bag = other_bags.pop()
-   if bag not in final_bags:
-      final_bags.append(bag)
-   for line in data:
-      line = line.strip()
-      if bag in line.split('contain')[1]:
-         new_bag = line.split('s contain ')[0]
-         if (new_bag not in other_bags) and (new_bag not in final_bags):
-            other_bags.append(new_bag)
+import re
+final_bags = {}
+for line in data:
+   line = line.strip()
+   bag = line.split('s contain ')[0]
+   match = re.findall(r'((\d)([\s\w]+bag))(?:,|.)', line)
+   if bag not in final_bags.keys():
+      final_bags[bag] = {}
+      for item in match:
+         final_bags[bag][item[2].lstrip()] = int(item[1])
+#print(final_bags)
 
-# %%
-print(final_bags)
-print(len(final_bags)-1)
+#%%
+other_bags = ['shiny gold bag']
+new_bags = []
+while len(other_bags) > 0:
+   #print(other_bags)
+   bag = other_bags.pop()
+   if bag not in new_bags:
+      new_bags.append(bag)
+   for key in final_bags.keys():
+      if bag in final_bags[key].keys():
+         if (key not in other_bags) and (key not in new_bags):
+            other_bags.append(key)
+print(new_bags)
+print(len(new_bags)-1)
+
 # %%
 '''
 Part 2
@@ -65,23 +75,11 @@ plus 2 vibrant plum bags (and the 11 bags within each of those): 1 + 1*7 + 2 + 2
 
 How many individual bags are required inside your single shiny gold bag?
 '''
-#%%
-import re
-final_bags = {}
-for line in data:
-   line = line.strip()
-   bag = line.split('s contain ')[0]
-   match = re.findall(r'((\d)([\s\w]+bag))(?:,|.)', line)
-   if bag not in final_bags.keys():
-      final_bags[bag] = {}
-      for item in match:
-         final_bags[bag][item[2].lstrip()] = int(item[1])
-#print(final_bags)
 
 #%%
 def get_number_of_bags(bag, num, total):
-   print(bag, num, total[-1])
-   print(final_bags[bag])
+   #print(bag, num, total[-1])
+   #print(final_bags[bag])
    if len(final_bags[bag].keys()) == 0:
       return total[-1]
 
@@ -90,5 +88,5 @@ def get_number_of_bags(bag, num, total):
       get_number_of_bags(new_bag, num * final_bags[bag][new_bag], total)
 
 total = [0]
-print(get_number_of_bags('shiny gold bag', 1, total))
+get_number_of_bags('shiny gold bag', 1, total)
 print(total)
