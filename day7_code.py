@@ -90,3 +90,30 @@ def get_number_of_bags(bag, num, total):
 total = [0]
 get_number_of_bags('shiny gold bag', 1, total)
 print(total)
+
+#%%
+#Another way: By "Rodrigo Erices" in MADS
+import re
+with open('input7.txt') as file:
+    data = file.read().split('\n')
+# Loading up Data 
+bag_dict = {}
+for rule in data:
+    obag = re.findall('(^[\w ]+) bags ', rule)[0]
+    bag_dict[obag] = {r.groups()[1]: r.groups()[0] for r in re.finditer('([\d]+) ([\w ]+) bags*', rule)}
+# Part 1 
+def bag_search(color):
+    bag_list = [color]
+    for color in bag_list:
+        bag_list.extend([k for k,v in bag_dict.items() if color in v.keys()])
+    return len(set(bag_list)) - 1
+bag_search('shiny gold')
+# Part 2
+def bag_count(color):
+    total = 0
+    for c,v in bag_dict[color].items():
+        if c == 'other': 
+            return 0
+        total += int(v) + int(v)*bag_count(c)
+    return total
+bag_count('shiny gold')
